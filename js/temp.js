@@ -1,13 +1,65 @@
-let ulChildren = document.querySelector("ul").children;
-let img = document.createElement("img");
-img.src = "https://www.google.com.ua/search?q=%D1%85%D0%B0%D1%80%D0%BB%D0%B0%D0%BC%D0%BE%D0%B2&tbm=isch&source=lnms&sa=X&ved=0ahUKEwjEtYfmmJbdAhULkSwKHaETBBYQ_AUICygC&biw=1396&bih=662&dpr=1.38#imgrc=5Kj2BV3j8pe82M:";
-img.width = 500;
-img.height = 200;
+let list = document.querySelector(".list-group");
+let clear = document.getElementById("clear");
+let inputText = document.getElementById("inputText");
+let addText = document.getElementById("addText");
+let form = document.forms["add-text-form"];
 
-document.body.insertAdjacentElement("afterbegin", img);
-for (let i = 0; i < ulChildren.length; i++) {
-    let strong = document.createElement("strong");
-    strong.textContent = i.toString() + " ";
+let array = [{
+    id: "1",
+    text: "fucking message"
+}];
 
-    ulChildren[i].insertAdjacentElement("afterbegin", strong);
+function addElementToArray() {
+    let id = generatedId();
+    let text = inputText.value;
+    let obj = {};
+    obj.id = id;
+    obj.text = text;
+    array.unshift(obj);
 }
+
+function generatedId() {
+    let id = "";
+    let char = "1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM";
+    for (let i = 0; i < 15; i++) {
+        let random = Math.floor(Math.random() * char.length);
+        id += char[random];
+    }
+    return id;
+}
+
+function addElement(elem) {
+    let li = document.createElement("li");
+    li.className = "list-group-item d-flex";
+    let iconDelete = document.createElement("i");
+    iconDelete.className = "fas fa-trash-alt delete ml-2";
+    let iconEdit = document.createElement("i");
+    iconEdit.className = "fas fa-edit edit ml-auto";
+    li.setAttribute("data-id", generatedId().toString());
+    li.textContent = elem;
+    li.appendChild(iconEdit);
+    li.appendChild(iconDelete);
+    list.appendChild(li);
+}
+
+function createList(){
+    clearList();
+    for (let i = 0; i < array.length; i++) {
+        addElement(array[i].text);
+    }
+}
+
+function clearList() {
+    list.innerHTML = '';
+}
+
+clear.addEventListener("click", clearList);
+
+addText.addEventListener("click", function (e) {
+    e.preventDefault();
+
+    addElementToArray();
+    createList();
+    inputText.value = '';
+});
+createList();
